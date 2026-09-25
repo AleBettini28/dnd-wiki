@@ -1,28 +1,23 @@
-import './App.css';
+import { Route, Routes } from 'react-router-dom';
 
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-} from 'react-router-dom';
-
-import CharacterComponent from './CharacterComponent';
-import MainMenu from './MainMenu';
-import NoteTaker from './NoteTaker';
+import WikiLayout from './components/wiki/WikiLayout';
+import { ROUTES } from './constants/routes';
+import WikiCategoryPage from './pages/WikiCategoryPage';
+import WikiDetailPage from './pages/WikiDetailPage';
+import WikiHomePage from './pages/WikiHomePage';
+import WikiSearchPage from './pages/WikiSearchPage';
 
 function App() {
-
   return (
-    <BrowserRouter basename="/DnDApplication">
-      <Routes>
-          <Route path='/' element={<MainMenu/>}></Route>
-          <Route path='/character-builder' element={<CharacterComponent/>}></Route>
-          <Route path='/note-taker' element={<NoteTaker/>}></Route>
-      </Routes>
-    </BrowserRouter>
-  )
-
-// app/layout.tsx
+    <Routes>
+      <Route element={<WikiLayout />}>
+        <Route path={ROUTES.wiki} element={<WikiHomePage />} />
+        <Route path={ROUTES.search} element={<WikiSearchPage />} />
+        <Route path="/:category" element={<WikiCategoryPage />} />
+        <Route path="/:category/:index" element={<WikiDetailPage />} />
+      </Route>
+    </Routes>
+  );
 }
 
-export default App
+export default App;

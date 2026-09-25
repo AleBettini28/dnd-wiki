@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://AleBettini28.github.io/dnd-application",
+  "homepage": "https://AleBettini28.github.io/dnd-wiki",
   "scripts": {
     "dev": "vite",
     "lint": "eslint .",

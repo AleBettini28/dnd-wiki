@@ -7,7 +7,7 @@ import "./styles/index.css";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <BrowserRouter basename="/dnd-application">
+        <BrowserRouter basename="/dnd-wiki">
             <App />
         </BrowserRouter>
     </StrictMode>

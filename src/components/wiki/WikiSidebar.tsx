@@ -9,7 +9,15 @@ import {
 } from '../../constants/routes';
 import type { ApiResourceRef } from '../../types/api';
 
-function WikiSidebar() {
+type WikiSidebarProps = {
+  readonly isOpen?: boolean;
+  readonly onNavigate?: () => void;
+};
+
+function WikiSidebar({
+  isOpen = false,
+  onNavigate,
+}: Readonly<WikiSidebarProps>) {
   const { category: activeCategory } = useParams<{ category?: string }>();
   const [expanded, setExpanded] = useState<string | null>(
     activeCategory ?? null
@@ -64,16 +72,26 @@ function WikiSidebar() {
     setExpanded((prev) => (prev === categoryValue ? null : categoryValue));
   }
 
+  const sidebarClass = isOpen
+    ? 'wiki-sidebar wiki-sidebar--open'
+    : 'wiki-sidebar';
+
   return (
-    <aside className="wiki-sidebar" aria-label="Wiki sections">
+    <aside
+      id="wiki-sidebar"
+      className={sidebarClass}
+      aria-label="Wiki sections"
+      aria-hidden={!isOpen}
+      inert={!isOpen ? true : undefined}
+    >
       <div className="wiki-sidebar__header">
-        <NavLink to="/" className="wiki-sidebar__home">
+        <NavLink to="/" className="wiki-sidebar__home" onClick={onNavigate}>
           Wiki Home
         </NavLink>
       </div>
       <nav className="wiki-sidebar__nav">
         {DND_CATEGORIES.map((category) => {
-          const isOpen = expanded === category.value;
+          const isSectionOpen = expanded === category.value;
           const items = itemsByCategory[category.value] ?? [];
           const isLoading = loadingCategory === category.value;
           const hasError = errorCategory === category.value;
@@ -84,10 +102,10 @@ function WikiSidebar() {
                 <button
                   type="button"
                   className="wiki-sidebar__toggle"
-                  aria-expanded={isOpen}
+                  aria-expanded={isSectionOpen}
                   onClick={() => toggleCategory(category.value)}
                 >
-                  {isOpen ? '▾' : '▸'}
+                  {isSectionOpen ? '▾' : '▸'}
                 </button>
                 <NavLink
                   to={wikiCategoryPath(category.value)}
@@ -96,12 +114,13 @@ function WikiSidebar() {
                       ? 'wiki-sidebar__link wiki-sidebar__link--active'
                       : 'wiki-sidebar__link'
                   }
+                  onClick={onNavigate}
                 >
                   {category.label}
                 </NavLink>
               </div>
 
-              {isOpen && (
+              {isSectionOpen && (
                 <ul className="wiki-sidebar__items">
                   {isLoading && (
                     <li className="wiki-sidebar__status">Loading...</li>
@@ -122,6 +141,7 @@ function WikiSidebar() {
                               ? 'wiki-sidebar__item wiki-sidebar__item--active'
                               : 'wiki-sidebar__item'
                           }
+                          onClick={onNavigate}
                         >
                           {item.name}
                         </NavLink>
